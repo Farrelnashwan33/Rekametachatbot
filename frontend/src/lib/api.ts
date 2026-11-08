@@ -69,6 +69,15 @@ export class ApiError extends Error {
 	}
 }
 
+function getUnreachableBackendMessage(): string {
+	const metaEnv = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+	const configured = metaEnv?.PUBLIC_API_BASE_URL?.trim() ?? '';
+	if (typeof window !== 'undefined' && window.location.protocol === 'https:' && !configured) {
+		return 'Backend API produksi belum dihubungkan. Atur Build Variable PUBLIC_API_BASE_URL di Cloudflare ke URL server Laravel Anda.';
+	}
+	return 'Tidak dapat terhubung ke server API (port 8000). Pastikan backend Laravel sedang berjalan.';
+}
+
 export async function apiFetch<T = Record<string, unknown>>(
 	path: string,
 	options: RequestInit = {}
@@ -93,7 +102,7 @@ export async function apiFetch<T = Record<string, unknown>>(
 		});
 	} catch {
 		throw new ApiError(
-			'Tidak dapat terhubung ke server API (port 8000). Pastikan backend Laravel sedang berjalan.',
+			getUnreachableBackendMessage(),
 			503,
 			'BACKEND_UNREACHABLE'
 		);
@@ -137,7 +146,7 @@ export async function apiDownloadBlob(path: string): Promise<{ blob: Blob; filen
 		response = await fetch(`${getApiBase()}${path}`, { headers });
 	} catch {
 		throw new ApiError(
-			'Tidak dapat terhubung ke server API (port 8000). Pastikan backend Laravel sedang berjalan.',
+			getUnreachableBackendMessage(),
 			503,
 			'BACKEND_UNREACHABLE'
 		);
@@ -202,7 +211,7 @@ export async function streamChatEndpoint(
 			throw err;
 		}
 		throw new ApiError(
-			'Tidak dapat terhubung ke server API (port 8000). Pastikan backend Laravel sedang berjalan.',
+			getUnreachableBackendMessage(),
 			503,
 			'BACKEND_UNREACHABLE'
 		);

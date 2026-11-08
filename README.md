@@ -208,20 +208,19 @@ npm run build
    php artisan route:cache
    ```
 
-### C. Deployment Frontend ke Cloudflare Pages (`app.rekametachat.com`)
-1. Hubungkan repositori ke **Cloudflare Pages** dengan pengaturan:
-   - **Root directory:** `frontend`
-   - **Build command:** `npm run build`
-   - **Build output directory:** `.svelte-kit/cloudflare`
-2. Tambahkan Environment Variable pada Cloudflare Pages:
-   - `PUBLIC_API_BASE_URL=https://api.rekametachat.com`
+### C. Deployment Frontend ke Cloudflare Workers & Pages (`app.rekametachat.com`)
+1. Hubungkan repositori GitHub ke **Cloudflare Workers & Pages**:
+   - **Opsi 1 (Cloudflare Workers Builds default di root repositori):**
+     - **Root directory:** `/` (default)
+     - **Deploy command:** `npx wrangler deploy`
+     - Konfigurasi pada `wrangler.toml` di root repositori otomatis menjalankan instalasi dependensi, build SvelteKit, dan mengunggah bundle Worker beserta 45 aset statis ke layanan `rekametachatbot`.
+   - **Opsi 2 (Subfolder `frontend`):**
+     - **Root directory:** `frontend`
+     - **Build command:** `npm run build`
+     - **Deploy command:** `npx wrangler deploy`
+2. Tambahkan **Build Variable / Environment Variable** pada pengaturan proyek Cloudflare:
+   - `PUBLIC_API_BASE_URL=https://api.rekametachat.com` (sesuaikan dengan URL server backend Laravel Anda)
    - `PUBLIC_APP_NAME=Rekametachat`
-3. Atau deploy langsung menggunakan Wrangler CLI:
-   ```bash
-   cd frontend
-   npm run build
-   npx wrangler pages deploy .svelte-kit/cloudflare --project-name rekametachat-web
-   ```
 
 ### D. Cloudflare DNS, SSL & Keamanan
 1. Arahkan `CNAME` domain utama (misal `app.rekametachat.com`) ke proyek Cloudflare Pages dan `A`/`CNAME` subdomain `api.rekametachat.com` ke IP server Laravel dengan status **Proxied (Orange Cloud)**.

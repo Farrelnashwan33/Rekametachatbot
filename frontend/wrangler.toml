@@ -1,13 +1,14 @@
-name = "rekametachat-web"
+name = "rekametachatbot"
+main = ".svelte-kit/cloudflare/_worker.js"
 compatibility_date = "2026-01-01"
-pages_build_output_dir = ".svelte-kit/cloudflare"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+
+[assets]
+binding = "ASSETS"
+directory = ".svelte-kit/cloudflare"
 
 [vars]
 PUBLIC_APP_NAME = "Rekametachat"
-PUBLIC_API_BASE_URL = "https://api.rekametachat.com"
-
-# Optional Cloudflare R2 binding if serving Worker assets directly
-# [[r2_buckets]]
-# binding = "REKAMETACHAT_FILES"
-# bucket_name = "rekametachat-files"
-
