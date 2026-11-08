@@ -1,0 +1,29 @@
+# Environment & Secrets (Never commit secrets to Git)
+.env
+.env.local
+.env.*.local
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Dependencies & Build Outputs
+backend/vendor/
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/.wrangler/
+
+# Runtime Storage, Logs & Cache
+backend/storage/app/private/*
+!backend/storage/app/private/.gitignore
+backend/storage/logs/*.log
+backend/bootstrap/cache/*.php
+
+# OS & Editor Artifacts
+.DS_Store
+Thumbs.db
+*.swp
+
